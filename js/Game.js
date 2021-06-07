@@ -71,7 +71,6 @@ class Game {
     handleInteraction(e) {
         const type = e.type;
 
-
         /**
         * Displays phrase tiles while disabling onscreen
         * keyboard
