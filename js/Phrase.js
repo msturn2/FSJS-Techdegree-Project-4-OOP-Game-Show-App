@@ -52,9 +52,8 @@ class Phrase {
         const letters = document.querySelectorAll(".letter");
         
         letters.forEach((li) => {
-            if (li.textContent === letter) {
+            if (li.textContent === letter) 
                 li.setAttribute("class", "show");
-            }
         });
     }
 }

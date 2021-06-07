@@ -16,15 +16,15 @@ class Game {
     */
     createPhrases() {
         const phrases = [
-            new Phrase("Aspire to inspire before we expire"),
-            new Phrase("Whatever you do do it well"),
-            new Phrase("Tough times never last but tough people do"),
-            new Phrase("I dont need it to be easy I need it to be worth it"),
-            new Phrase("There is no substitute for hard work"),
-            new Phrase("Try to get out of life alive"),
-            new Phrase("The time is always right to do what is right"),
-            new Phrase("Happiness depends on ourselves"),
-            new Phrase("Turn your wounds into wisdom"),
+            new Phrase("Just win Baby"),
+            new Phrase("Democracy Dies in Darkness"),
+            new Phrase("Think different"),
+            new Phrase("Power corrupts"),
+            new Phrase("You cant win them all"),
+            new Phrase("Get out of life alive"),
+            new Phrase("Waste not want not"),
+            new Phrase("Just Do It"),
+            new Phrase("The best or nothing"),
             new Phrase("It hurt because it mattered")
         ];
         
@@ -37,30 +37,46 @@ class Game {
     * @return {Object} Phrase object chosen to be used
     */
     getRandomPhrase() {
-        const randomIndexNum = Math.floor(Math.random() * this.phrases.length);
-        return this.phrases[randomIndexNum];
+        return this.phrases[Math.floor(Math.random() * 
+            this.phrases.length)];
     };
     
     
     /**
-    * Begins game by selecting a random phrase and displaying it to user
+    * Begins game by selecting a random phrase and 
+    * displaying it to user
     */
     startGame() {
-        document.getElementById("overlay").style.display = "none";
+        document.getElementById("overlay")
+            .style.display = "none";
         const randPhrase = this.getRandomPhrase();
         randPhrase.addPhraseToDisplay();
         this.activePhrase = randPhrase;
         this.resetGame();
+        
+        const changeHearts = document.querySelectorAll(".tries");
+        changeHearts.forEach(changeHeart => {
+            changeHeart.firstElementChild.src = "images/beatingHeart.gif";
+            changeHeart.firstElementChild.alt = 
+                "Beating Heart from https://gifer.com/en/4ZOO";
+        });
     }
 
 
     /**
-    * Handles onscreen keyboard button clicks
-    * @param {HTMLButtonElement} button - The clicked button element
+    * Handles click and keyup events
+    * @param {eventObject} e - event object passed
+    * by event handler
     */
     handleInteraction(e) {
         const type = e.type;
 
+
+        /**
+        * Displays phrase tiles while disabling onscreen
+        * keyboard
+        * @param {HTMLButtonElement} element - DOM node
+        */
         const either = (element) => {
             const letter = element.textContent;
             element.disabled = true;
@@ -114,15 +130,14 @@ class Game {
     * Checks if player has remaining lives and ends game if player is out
     */
     removeLife() {
+        this.missed++;
         const life = document.querySelector(".tries");
-            
-        if (this.missed === 4) {
-            this.gameOver(false);
-        } else {
-            this.missed++;
-            life.firstElementChild.src = "images/lostHeart.png";
-            life.setAttribute("class", "lost");
-        }
+        life.firstElementChild.src = "images/flamingSkull.png";
+        life.firstElementChild.alt = 
+            "Flaming Skull from https://www.clipartmax.com/so/flaming-skull-clipart/";
+        life.setAttribute("class", "lost");
+
+        if (this.missed === 5) this.gameOver(false);
     }
 
 
@@ -137,7 +152,11 @@ class Game {
         const messageElement = document.querySelector("h1");
         overlayDiv.style.display = "";
 
-        if (gameWon) { 
+        if (gameWon) {
+            const script = document.createElement("script");
+            script.setAttribute("src", "js/confetti.js");
+            script.setAttribute("id", "confetti-remove");
+            document.body.appendChild(script);
             overlayDiv.setAttribute("class", "win");
             messageElement.textContent = messageWon;
         } else {
@@ -147,25 +166,38 @@ class Game {
     }
 
 
+    /**
+     * Removes dynamically added elements, classes,
+     * ids and enables the onscreen keyboard allowing
+     * the game to replay
+     */
     resetGame() {
         const resetH1 = document.querySelector("h1");
         const resetHearts = document.querySelectorAll(".lost");
         const resetButtons = document.querySelectorAll("button[disabled]");
         const resetOverlay = document.getElementById("overlay");
+        const resetScript = document.getElementById("confetti-remove");
+        const resetCanvas = document.querySelector("canvas");
+
+        if (resetCanvas) {
+            resetScript.parentNode
+            .removeChild(resetScript);
+            resetCanvas.parentNode
+            .removeChild(resetCanvas);
+        }
 
         resetH1.textContent = "";
         resetOverlay.setAttribute("class", "start");
         
         resetButtons.forEach(button => {
             button.disabled = false;
-            if (button.classList.contains("chosen") || button.classList.contains("wrong")) {
+            if (button.classList.contains("chosen") || 
+                button.classList.contains("wrong")) 
                 button.setAttribute("class", "key");
-            }
         });
 
         resetHearts.forEach(heart => {
             heart.setAttribute("class", "tries");
-            heart.firstElementChild.src = "images/liveHeart.png";
         });
     }
 }
