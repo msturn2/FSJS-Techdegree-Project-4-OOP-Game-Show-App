@@ -5,6 +5,7 @@
  */
 
 let game;
+const overlay = document.getElementById("overlay");
 
 
 /** 
@@ -22,7 +23,9 @@ document.getElementById("btn__reset")
  * Listen for onscreen keyboard click
  */
 document.addEventListener("click", (e) => {
-    game.handleInteraction(e);
+    if (overlay.style.display === "none") {
+        game.handleInteraction(e);
+    }
 });
 
 
@@ -30,5 +33,7 @@ document.addEventListener("click", (e) => {
  * Listen for keyboard keyup
  */
 document.addEventListener("keyup", (e) => {
-    game.handleInteraction(e);
+    if (overlay.style.display === "none") {
+        game.handleInteraction(e);
+    }
 });
