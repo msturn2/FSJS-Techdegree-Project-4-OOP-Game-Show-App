@@ -14,20 +14,31 @@ class Phrase {
      * Display phrase on game board
      */
     addPhraseToDisplay() {
-        const splitPhrases = this.phrase.split('');
+        const wordPhrases = this.phrase.split(" ")
         const ul = document.createElement("ul");
         const div = document.getElementById("phrase");
 
-        splitPhrases.forEach(letter => {
-            let li = document.createElement("li");
-            li.textContent = letter;
-        
-            /^\s+|\s+$/g.test(letter) ? 
-            li.setAttribute("class", "space") : 
-            li.setAttribute("class", `hide letter ${letter}`);
-        
-            ul.appendChild(li);
-        });
+        for (let i = 0; i < wordPhrases.length; i++) {
+            let span = document.createElement("span");
+            span.setAttribute("class", "word");
+            span.style.display = "inline-block";
+
+            wordPhrases[i].split("").forEach(letter => {
+                let li = document.createElement("li");
+                li.textContent = letter;
+                li.setAttribute("class", `hide letter ${letter}`);
+
+                span.appendChild(li);
+            });
+
+            if (i < wordPhrases.length - 1) {
+                let space = `<li class="space"> </li>`;
+                ul.appendChild(span)
+                    .insertAdjacentHTML("afterEnd", space);
+            } else {
+                ul.appendChild(span);
+            }
+        };
 
         div.innerHTML = "";
         div.appendChild(ul);
